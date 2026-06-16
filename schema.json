@@ -1,0 +1,76 @@
+{
+  "spreadsheet": {
+    "title": "Pammi Content Calendar",
+    "id": "1rHM6bHIsq8h8a0jG83afWdlZs6wHV25yANutPdkhODk",
+    "url": "https://docs.google.com/spreadsheets/d/1rHM6bHIsq8h8a0jG83afWdlZs6wHV25yANutPdkhODk/edit",
+    "owner": "pammibot6@gmail.com",
+    "created_at": "2026-06-16"
+  },
+  "tabs": {
+    "Content Packages": {
+      "description": "Top-level content brief. Each package can spawn multiple platform-specific posts and assets.",
+      "columns": [
+        {"name": "package_id", "type": "string", "description": "Unique ID, e.g. PKG-001"},
+        {"name": "status", "type": "enum", "values": ["IDEA", "BRIEFED", "IN_PROGRESS", "READY", "DONE", "ARCHIVED"], "description": "Lifecycle state"},
+        {"name": "topic", "type": "string", "description": "Short topic title"},
+        {"name": "angle", "type": "string", "description": "Point of view / hook"},
+        {"name": "audience", "type": "string", "description": "Target audience"},
+        {"name": "source_notes", "type": "text", "description": "Source material / research links"},
+        {"name": "formats_requested", "type": "string", "description": "Comma-separated: linkedin, blog, newsletter, etc."},
+        {"name": "created_at", "type": "datetime", "description": "ISO timestamp"},
+        {"name": "notes", "type": "text", "description": "Free-form notes"}
+      ]
+    },
+    "LinkedIn": {
+      "description": "LinkedIn-specific posts. Each post is a child of one Content Package.",
+      "columns": [
+        {"name": "post_id", "type": "string", "description": "Unique ID, e.g. LI-001"},
+        {"name": "package_id", "type": "string", "description": "FK to Content Packages"},
+        {"name": "status", "type": "enum", "values": ["DRAFT", "ASSET_READY", "READY", "APPROVED", "SCHEDULED", "POSTED", "FAILED"], "description": "Lifecycle state"},
+        {"name": "topic", "type": "string", "description": "Short topic title"},
+        {"name": "dedup_key", "type": "string", "description": "Hash to prevent duplicate posts"},
+        {"name": "post_body", "type": "text", "description": "The actual post content"},
+        {"name": "scheduled_at", "type": "datetime", "description": "When to post (ISO)"},
+        {"name": "approved", "type": "boolean", "description": "User approval flag"},
+        {"name": "asset_id", "type": "string", "description": "FK to Assets (image for post)"},
+        {"name": "image_file_id", "type": "string", "description": "Google Drive file ID of image"},
+        {"name": "image_drive_url", "type": "string", "description": "Google Drive URL"},
+        {"name": "published_url", "type": "string", "description": "LinkedIn post URL after publish"},
+        {"name": "notes", "type": "text", "description": "Free-form notes"}
+      ]
+    },
+    "Assets": {
+      "description": "Visual and media assets (images, videos, carousels). Linked to packages and posts.",
+      "columns": [
+        {"name": "asset_id", "type": "string", "description": "Unique ID, e.g. AST-001"},
+        {"name": "package_id", "type": "string", "description": "FK to Content Packages"},
+        {"name": "status", "type": "enum", "values": ["REQUESTED", "IN_PROGRESS", "DRAFT", "APPROVED", "EXPORTED"], "description": "Lifecycle state"},
+        {"name": "asset_type", "type": "enum", "values": ["image", "carousel", "video", "thumbnail", "diagram", "chart", "quote_card", "mascot"], "description": "Type of asset"},
+        {"name": "target_platform", "type": "string", "description": "linkedin, twitter, blog, etc."},
+        {"name": "purpose", "type": "string", "description": "What this asset is for"},
+        {"name": "brief", "type": "text", "description": "Creative brief for visual-content-pammi"},
+        {"name": "source_file_id", "type": "string", "description": "Source file (PSD/Figma/etc) Drive ID"},
+        {"name": "source_drive_url", "type": "string", "description": "Source file URL"},
+        {"name": "export_file_id", "type": "string", "description": "Final exported file Drive ID"},
+        {"name": "export_drive_url", "type": "string", "description": "Final exported file URL"},
+        {"name": "mime_type", "type": "string", "description": "image/png, video/mp4, etc."},
+        {"name": "notes", "type": "text", "description": "Free-form notes"}
+      ]
+    },
+    "Publishing Log": {
+      "description": "Audit log of every publish attempt. Append-only.",
+      "columns": [
+        {"name": "log_id", "type": "string", "description": "Unique log ID"},
+        {"name": "post_id", "type": "string", "description": "FK to platform post (LinkedIn etc.)"},
+        {"name": "package_id", "type": "string", "description": "FK to Content Packages"},
+        {"name": "platform", "type": "string", "description": "linkedin, twitter, etc."},
+        {"name": "published_at", "type": "datetime", "description": "ISO timestamp of publish"},
+        {"name": "status", "type": "enum", "values": ["SUCCESS", "FAILED", "RETRY_SCHEDULED"], "description": "Result"},
+        {"name": "published_url", "type": "string", "description": "URL of the published post"},
+        {"name": "error", "type": "text", "description": "Error message if failed"},
+        {"name": "retry_at", "type": "datetime", "description": "When to retry (if failed)"},
+        {"name": "created_at", "type": "datetime", "description": "ISO timestamp of log entry"}
+      ]
+    }
+  }
+}
